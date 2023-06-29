@@ -32,12 +32,19 @@ app.get("/chat", async (req: Request, res: Response) => {
   res.render("client/chat");
 });
 app.get("/test", async (req: Request, res: Response) => {
-  const message = new Message(
-    "test",
-    new ObjectId("649d816eefb84deb00067ca0"),
-    new Date()
-  );
-  await message.save();
+  // const message = new Message(
+  //   "test",
+  //   new ObjectId("649d816eefb84deb00067ca0"),
+  //   new Date()
+  // );
+  // await message.save();
+  //
+  // await Message.addMessage(
+  //   new ObjectId("649d8282f801cc28ce66e637"),
+  //   "slm in test pm 2 om",
+  //   new ObjectId("649d819befb84deb00067ca1"),
+  //   new Date()
+  // );
 });
 
 server.listen(3000, () => {

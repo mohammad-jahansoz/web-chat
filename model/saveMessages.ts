@@ -9,35 +9,43 @@ type message = {
 
 class Message {
   messages: message[] = [];
-  constructor(message: string, userId: ObjectId, sendAt: Date) {
+  _id: ObjectId;
+  constructor(_id: ObjectId, message: string, userId: ObjectId, sendAt: Date) {
+    this._id = _id;
     this.messages = [{ message, userId, sendAt }];
   }
   async save() {
-    await getDB().collection("messages").insertOne({ messages: this.messages });
-  }
-  static async addMessage(
-    id: ObjectId,
-    message: string,
-    userId: ObjectId,
-    sendAt: Date
-  ) {
-    await getDB()
-      .collection("messages")
-      .updateOne(
-        {
-          _id: new ObjectId(id),
-        },
-        {
-          $push: {
-            messages: {
-              message: message,
-              userId: new ObjectId(userId),
-              sendAt: sendAt,
-            },
+    if (this._id) {
+      await getDB()
+        .collection("messages")
+        .insertOne({ messages: this.messages });
+    } else {
+      // async addMessage(
+      //     id: ObjectId,
+      //     message: string,
+      //     userId: ObjectId,
+      //     sendAt: Date
+      //   ) {
+      await getDB()
+        .collection("messages")
+        .updateOne(
+          {
+            _id: new ObjectId(this._id),
           },
-        }
-      );
+          {
+            $push: {
+              messages: {
+                message: this.messages,
+                userId: new ObjectId(userId),
+                sendAt: sendAt,
+              },
+            },
+          }
+        );
+    }
   }
 }
+
+// }
 
 export default Message;
