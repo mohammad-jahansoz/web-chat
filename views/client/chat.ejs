@@ -74,7 +74,7 @@
         item.style.textAlign = "right";
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
-        socket.emit("chat message", input.value);
+        socket.emit("chat message", {pm:input.value , conversationId:"649d8282f801cc28ce66e637",userId:<%= userId %>});
         input.value = "";
       }
     });
