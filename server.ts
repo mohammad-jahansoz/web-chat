@@ -35,20 +35,21 @@ app.get("/test", async (req: Request, res: Response) => {
   // const message = new Message(
   //   "test",
   //   new ObjectId("649d816eefb84deb00067ca0"),
-  //   new Date()
+  //   new Date(),
+  // null
   // );
   // await message.save();
   //
-  // await Message.addMessage(
-  //   new ObjectId("649d8282f801cc28ce66e637"),
-  //   "slm in test pm 2 om",
-  //   new ObjectId("649d819befb84deb00067ca1"),
-  //   new Date()
-  // );
+  const message = new Message(
+    "dadash man toeiiiiiiiiiiii",
+    new ObjectId("649d816eefb84deb00067ca0"),
+    new Date(),
+    new ObjectId("649d8282f801cc28ce66e637")
+  );
+  await message.save();
 });
 
 server.listen(3000, () => {
   connectToDatabase();
-
   console.log("listening on port 3000");
 });
