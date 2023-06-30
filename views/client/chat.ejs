@@ -57,14 +57,18 @@
   <body>
     <ul id="messages"></ul>
     <form id="form" action="">
+      <input type="hidden" id="userId" name="userId" value="<%= userId %>" />
       <input id="input" autocomplete="off" /><button>Send</button>
     </form>
+
+    <h1><%= userId %></h1>
   </body>
   <script src="/socket.io/socket.io.js"></script>
   <script>
     var socket = io();
     var form = document.getElementById("form");
     var input = document.getElementById("input");
+    const userId = document.getElementById("userId").value;
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -74,7 +78,11 @@
         item.style.textAlign = "right";
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
-        socket.emit("chat message", {pm:input.value , conversationId:"649d8282f801cc28ce66e637",userId:<%= userId %>});
+        socket.emit("chat message", {
+          pm: input.value,
+          conversationId: "649d8282f801cc28ce66e637",
+          userId: userId,
+        });
         input.value = "";
       }
     });

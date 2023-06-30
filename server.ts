@@ -7,6 +7,7 @@ import session, { SessionOptions } from "express-session";
 import MongoStore from "connect-mongo";
 import Message from "./model/saveMessages";
 import { ObjectId } from "mongodb";
+import bodyParser from "body-parser";
 
 declare module "express-session" {
   export interface SessionData {
@@ -23,6 +24,7 @@ declare module "express-serve-static-core" {
 const app: Express = express();
 const server = http.createServer(app);
 const io = new Server(server);
+app.use(bodyParser.urlencoded({ extended: false }));
 const sessionOption: SessionOptions = {
   secret: "super fucking secret key",
   resave: false,
@@ -56,7 +58,8 @@ io.on("connection", (socket) => {
 
   socket.on(
     "chat message",
-    (pm: string, userId: ObjectId, conversationId: ObjectId) => {
+    (pm: string, userId: string, conversationId: string) => {
+      console.log(pm, userId, conversationId);
       console.log("Received message:", pm);
       socket.broadcast.emit("chat message", pm);
       if (!conversationId) {
@@ -99,6 +102,8 @@ app.post("/auth/login", async (req: Request, res: Response) => {
   if (user) {
     req.session.userId = user._id.toString();
     res.redirect("/chat");
+  } else {
+    res.send("nabod");
   }
 });
 
