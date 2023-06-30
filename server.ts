@@ -65,7 +65,6 @@ io.on("connection", (socket) => {
       conversationId: string;
     }) => {
       content.sendAt = new Date();
-      console.log(content);
       socket.broadcast.emit("chat message", content);
       if (!content.conversationId) {
         const message = new Message(
@@ -99,7 +98,6 @@ app.get("/auth/login", (req: Request, res: Response) => {
   res.render("client/login");
 });
 app.post("/auth/login", async (req: Request, res: Response) => {
-  // const { username, password } = req.body;
   console.log(req.body.username, req.body.password);
   const user = await getDB()
     .collection("users")

@@ -10,20 +10,24 @@ type message = {
 class Message {
   messages: message[] = [];
   _id: ObjectId | null;
+  peoples: ObjectId[] = [];
   constructor(
     message: string,
     userId: ObjectId,
     sendAt: Date,
     _id: ObjectId | null
+    // peoples: ObjectId[]
   ) {
     this._id = _id;
     this.messages = [{ message, userId, sendAt }];
+    // this.peoples = peoples;
   }
   async save() {
     if (!this._id) {
       await getDB()
         .collection("messages")
         .insertOne({ messages: this.messages });
+      //save id of chat in user collection
     } else {
       await getDB()
         .collection("messages")

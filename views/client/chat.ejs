@@ -4,7 +4,7 @@
 <link rel="stylesheet" href="/style/style.css">
   </head>
   <body>
-    <ul id="messages">
+    <ul id="messages" style="margin-bottom: 1rem;">
       <% for(const chat of chats.messages){ %>
       <li class="<%= (chat.userId == userId) ? "me" : "he-she"  %>"><%= chat.message %></li>
       <% } %>
@@ -27,7 +27,8 @@
       if (input.value) {
         var item = document.createElement("li");
         item.textContent = input.value;
-        item.style.textAlign = "right";
+        // item.style.textAlign = "right";
+        item.classList.add ("me")
         messages.appendChild(item);
         window.scrollTo(0, document.body.scrollHeight);
         socket.emit("chat message", {
@@ -42,6 +43,7 @@
     socket.on("chat message", function (content) {
       var item = document.createElement("li");
       item.textContent = content.pm;
+      item.classList.add("he-she")
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     });

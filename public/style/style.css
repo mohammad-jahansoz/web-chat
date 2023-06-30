@@ -1,9 +1,16 @@
 .me {
+  align-self: flex-end;
+  border-radius: 2rem;
   text-align: right;
+  background-color: red;
 }
 
 .he-she {
   text-align: left;
+
+  align-self: flex-start;
+  border-radius: 2rem;
+  background-color: blue;
 }
 
 body {
@@ -49,10 +56,15 @@ body {
   list-style-type: none;
   margin: 0;
   padding: 0;
+  margin-bottom: 1rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-direction: column;
+  width: 100%;
 }
 #messages > li {
   padding: 0.5rem 1rem;
 }
-#messages > li:nth-child(odd) {
+/* #messages > li:nth-child(odd) {
   background: #efefef;
-}
+} */
