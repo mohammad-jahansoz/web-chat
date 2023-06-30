@@ -88,8 +88,12 @@ io.on("connection", (socket) => {
   );
 });
 
-app.get("/chat", (req: Request, res: Response) => {
-  res.render("client/chat", { userId: req.userId });
+app.get("/chat", async (req: Request, res: Response) => {
+  const chats = await getDB()
+    .collection("messages")
+    .findOne({ _id: new ObjectId("649d8282f801cc28ce66e637") });
+  console.log(chats);
+  res.render("client/chat", { userId: req.userId, chats: chats });
 });
 app.get("/auth/login", (req: Request, res: Response) => {
   res.render("client/login");
