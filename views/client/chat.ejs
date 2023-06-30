@@ -58,10 +58,9 @@
     <ul id="messages"></ul>
     <form id="form" action="">
       <input type="hidden" id="userId" name="userId" value="<%= userId %>" />
-      <input id="input" autocomplete="off" /><button>Send</button>
+      <input id="input" autocomplete="off" />
+      <button>Send</button>
     </form>
-
-    <h1><%= userId %></h1>
   </body>
   <script src="/socket.io/socket.io.js"></script>
   <script>
@@ -87,9 +86,9 @@
       }
     });
 
-    socket.on("chat message", function (msg) {
+    socket.on("chat message", function (content) {
       var item = document.createElement("li");
-      item.textContent = msg;
+      item.textContent = content.pm;
       messages.appendChild(item);
       window.scrollTo(0, document.body.scrollHeight);
     });
