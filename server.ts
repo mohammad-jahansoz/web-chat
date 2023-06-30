@@ -58,30 +58,31 @@ io.on("connection", (socket) => {
 
   socket.on(
     "chat message",
-    (pm: string, userId: string, conversationId: string) => {
-      console.log(pm, userId, conversationId);
-      console.log("Received message:", pm);
-      socket.broadcast.emit("chat message", pm);
-      if (!conversationId) {
-        async () => {
-          const message = new Message(
-            pm,
-            new ObjectId(userId),
-            new Date(),
-            null
-          );
-          await message.save();
-        };
+    (content: {
+      sendAt: Date;
+      pm: string;
+      userId: string;
+      conversationId: string;
+    }) => {
+      content.sendAt = new Date();
+      console.log(content);
+      socket.broadcast.emit("chat message", content);
+      if (!content.conversationId) {
+        const message = new Message(
+          content.pm,
+          new ObjectId(content.userId),
+          content.sendAt,
+          null
+        );
+        message.save();
       } else {
-        async () => {
-          const message = new Message(
-            pm,
-            new ObjectId(userId),
-            new Date(),
-            new ObjectId(conversationId)
-          );
-          await message.save();
-        };
+        const message = new Message(
+          content.pm,
+          new ObjectId(content.userId),
+          content.sendAt,
+          new ObjectId(content.conversationId)
+        );
+        message.save();
       }
     }
   );
