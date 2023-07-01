@@ -8,6 +8,7 @@ import MongoStore from "connect-mongo";
 import Message from "./model/saveMessages";
 import { ObjectId } from "mongodb";
 import bodyParser from "body-parser";
+import NewMessage from "./model/Message";
 
 declare module "express-session" {
   export interface SessionData {
@@ -58,47 +59,66 @@ io.on("connection", (socket) => {
 
   socket.on(
     "chat message",
-    (content: {
-      sendAt: Date;
-      pm: string;
-      userId: string;
-      conversationId: string;
-    }) => {
+    (content: { sendAt: Date; pm: string; userId: string; chatId: string }) => {
       content.sendAt = new Date();
       socket.broadcast.emit("chat message", content);
-      if (!content.conversationId) {
-        const message = new Message(
-          content.pm,
-          new ObjectId(content.userId),
-          content.sendAt,
-          null
-        );
-        message.save();
-      } else {
-        const message = new Message(
-          content.pm,
-          new ObjectId(content.userId),
-          content.sendAt,
-          new ObjectId(content.conversationId)
-        );
-        message.save();
-      }
+      NewMessage.save(new ObjectId(content.chatId), {
+        message: content.pm,
+        sendAt: content.sendAt,
+        userId: new ObjectId(content.userId),
+      });
     }
   );
 });
 
-app.get("/chat", async (req: Request, res: Response) => {
-  const chats = await getDB()
-    .collection("messages")
-    .findOne({ _id: new ObjectId("649d8282f801cc28ce66e637") });
-  console.log(chats);
-  res.render("client/chat", { userId: req.userId, chats: chats });
+app.get("/", async (req: Request, res: Response) => {
+  const user = await getDB()
+    .collection("users")
+    .findOne({ _id: new ObjectId(req.userId) });
+  if (user) {
+    const friendsUser = await getDB()
+      .collection("users")
+      .find({ _id: { $in: user.chats } })
+      .toArray();
+    res.send(friendsUser);
+  }
 });
+
+app.get("/search", async (req: Request, res: Response) => {
+  res.render("client/search");
+});
+app.post("/search", async (req: Request, res: Response) => {
+  const username = req.body.username;
+  const users = await getDB()
+    .collection("users")
+    .find({ username: username })
+    .limit(5)
+    .toArray();
+  res.render("client/chats", { users });
+});
+
+app.post("/:username", async (req: Request, res: Response) => {
+  const username = req.params.username;
+  const userId = req.body.userId;
+  const message = new NewMessage(null, [
+    new ObjectId(userId),
+    new ObjectId(req.userId),
+  ]);
+  const chatId = await message.createChat();
+  res.render("client/chat", { userId: req.userId, chatId: chatId });
+});
+
+// app.get("/chat", async (req: Request, res: Response) => {
+//   const chats = await getDB()
+//     .collection("messages")
+//     .findOne({ _id: new ObjectId("649d8282f801cc28ce66e637") });
+//   res.render("client/chat", { userId: req.userId, chats: chats });
+// });
+
 app.get("/auth/login", (req: Request, res: Response) => {
   res.render("client/login");
 });
 app.post("/auth/login", async (req: Request, res: Response) => {
-  console.log(req.body.username, req.body.password);
   const user = await getDB()
     .collection("users")
     .findOne({ username: req.body.username, password: req.body.password });
@@ -111,6 +131,6 @@ app.post("/auth/login", async (req: Request, res: Response) => {
 });
 
 server.listen(3000, () => {
-  connectToDatabase();
   console.log("listening on port 3000");
+  connectToDatabase();
 });

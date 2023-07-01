@@ -10,7 +10,7 @@ type message = {
 class Message {
   messages: message[] = [];
   _id: ObjectId | null;
-  peoples: ObjectId[] = [];
+  users: ObjectId[] = [];
   constructor(
     message: string,
     userId: ObjectId,
