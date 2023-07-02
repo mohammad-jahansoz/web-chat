@@ -49,11 +49,17 @@
     });
 
     socket.on("chat message", function (content) {
-      var item = document.createElement("li");
-      item.textContent = content.pm;
-      item.classList.add("he-she");
-      messages.appendChild(item);
-      window.scrollTo(0, document.body.scrollHeight);
+      console.log(friendId + "   friendId");
+      console.log(content.friendId + "   content.friendId");
+      if (content.userId === friendId) {
+        var item = document.createElement("li");
+        item.textContent = content.pm;
+        item.classList.add("he-she");
+        messages.appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+      } else {
+        alert(content.pm + "یکی دیکه گفته ");
+      }
     });
   </script>
 </html>
