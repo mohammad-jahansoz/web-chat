@@ -8,6 +8,12 @@
     <form id="form" action="">
       <input type="hidden" id="userId" name="userId" value="<%= userId %>" />
       <input type="hidden" id="chatId" name="chatId" value="<%= chatId %>" />
+      <input
+        type="hidden"
+        id="friendId"
+        name="friendId"
+        value="<%= friendId %>"
+      />
       <input id="input" autocomplete="off" />
       <button>Send</button>
     </form>
@@ -19,7 +25,9 @@
     var input = document.getElementById("input");
     const userId = document.getElementById("userId").value;
     const chatId = document.getElementById("chatId").value;
-    
+    const friendId = document.getElementById("friendId").value;
+
+    socket.emit("register", userId);
 
     form.addEventListener("submit", function (e) {
       e.preventDefault();
@@ -33,6 +41,7 @@
         socket.emit("chat message", {
           pm: input.value,
           chatId: chatId,
+          friendId: friendId,
           userId: userId,
         });
         input.value = "";

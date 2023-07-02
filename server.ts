@@ -51,17 +51,38 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.set("views", "views");
 
+let users: { [userId: string]: string } = {};
+
 io.on("connection", (socket) => {
   console.log("A user connected");
   socket.on("disconnect", () => {
     console.log("A user disconnected");
   });
 
+  socket.on("register", (userId: string) => {
+    console.log("register" + userId);
+    users[userId] = socket.id;
+    console.log(socket.id);
+  });
+
   socket.on(
     "chat message",
-    (content: { sendAt: Date; pm: string; userId: string; chatId: string }) => {
+    (content: {
+      sendAt: Date;
+      pm: string;
+      userId: string;
+      chatId: string;
+      friendId: string;
+    }) => {
       content.sendAt = new Date();
-      socket.broadcast.emit("chat message", content);
+      console.log(content.userId + "me");
+      console.log(content.friendId + "he");
+      const friendSocketId = users[content.friendId];
+      console.log(friendSocketId + "            socketid");
+      console.log(users);
+      if (friendSocketId) {
+        io.to(friendSocketId).emit("chat message", content);
+      }
       NewMessage.save(new ObjectId(content.chatId), {
         message: content.pm,
         sendAt: content.sendAt,
@@ -99,13 +120,17 @@ app.post("/search", async (req: Request, res: Response) => {
 
 app.post("/:username", async (req: Request, res: Response) => {
   const username = req.params.username;
-  const userId = req.body.userId;
+  const friendId = req.body.userId;
   const message = new NewMessage(null, [
-    new ObjectId(userId),
+    new ObjectId(friendId),
     new ObjectId(req.userId),
   ]);
   const chatId = await message.createChat();
-  res.render("client/chat", { userId: req.userId, chatId: chatId });
+  res.render("client/chat", {
+    userId: req.userId,
+    chatId: chatId,
+    friendId: friendId,
+  });
 });
 
 // app.get("/chat", async (req: Request, res: Response) => {
