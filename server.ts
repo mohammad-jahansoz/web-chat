@@ -98,17 +98,23 @@ app.get("/", async (req: Request, res: Response) => {
     .collection("users")
     .findOne({ _id: new ObjectId(req.userId) });
   if (user) {
+    const friendsId = user.chats.map(
+      (chat: { chatId: ObjectId; friendId: ObjectId }) => {
+        return chat.friendId;
+      }
+    );
     const friendsUser = await getDB()
       .collection("users")
-      .find({ _id: { $in: user.chats } })
+      .find({ _id: { $in: friendsId } })
       .toArray();
-    res.send(friendsUser);
+    res.render("client/chats", { userId: req.userId, friends: friendsUser });
   }
 });
 
 app.get("/search", async (req: Request, res: Response) => {
   res.render("client/search");
 });
+
 app.post("/search", async (req: Request, res: Response) => {
   const username = req.body.username;
   const users = await getDB()
@@ -120,13 +126,24 @@ app.post("/search", async (req: Request, res: Response) => {
 });
 
 app.post("/:username", async (req: Request, res: Response) => {
+  let chatId;
   const username = req.params.username;
-  const friendId = req.body.userId;
-  const message = new NewMessage(null, [
-    new ObjectId(friendId),
-    new ObjectId(req.userId),
-  ]);
-  const chatId = await message.createChat();
+  const friendId = req.body.friendId;
+  const userWithFriendId = [new ObjectId(friendId), new ObjectId(req.userId)];
+  const chat = await getDB()
+    .collection("messages")
+    .findOne({ users: { $all: userWithFriendId } });
+  if (!chat) {
+    console.log("new friend");
+    const message = new NewMessage(null, [
+      new ObjectId(friendId),
+      new ObjectId(req.userId),
+    ]);
+    chatId = await message.createChat();
+  } else {
+    console.log("old friend");
+    chatId = chat._id;
+  }
   res.render("client/chat", {
     userId: req.userId,
     chatId: chatId,

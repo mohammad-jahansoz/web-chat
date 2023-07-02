@@ -7,11 +7,11 @@
   </head>
   <body>
     <ul>
-      <% for(const user of users){ %>
+      <% for(const friend of friends){ %>
       <li>
-        <h3><%= user.username %></h3>
-        <form action="/<%= user.username %>" method="POST">
-          <input type="hidden" name="userId" value="<%= user._id %>" />
+        <h3><%= friend.username %></h3>
+        <form action="/<%= friend.username %>" method="POST">
+          <input type="hidden" name="friendId" value="<%= friend._id %>" />
           <button type="submit">send message</button>
         </form>
       </li>
