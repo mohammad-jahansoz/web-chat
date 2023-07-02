@@ -60,9 +60,10 @@ io.on("connection", (socket) => {
   });
 
   socket.on("register", (userId: string) => {
-    console.log("register" + userId);
-    users[userId] = socket.id;
-    console.log(socket.id);
+    socket.join(userId);
+    // console.log("register" + userId);
+    // users[userId] = socket.id;
+    // console.log(socket.id);
   });
 
   socket.on(
@@ -75,14 +76,14 @@ io.on("connection", (socket) => {
       friendId: string;
     }) => {
       content.sendAt = new Date();
-      console.log(content.userId + "me");
-      console.log(content.friendId + "he");
-      const friendSocketId = users[content.friendId];
-      console.log(friendSocketId + "            socketid");
-      console.log(users);
-      if (friendSocketId) {
-        io.to(friendSocketId).emit("chat message", content);
-      }
+      // console.log(content.userId + "me");
+      // console.log(content.friendId + "he");
+      // const friendSocketId = users[content.friendId];
+      // console.log(friendSocketId + "            socketid");
+      // console.log(users);
+      // if (friendSocketId) {
+      io.to(content.friendId).emit("chat message", content);
+      // }
       NewMessage.save(new ObjectId(content.chatId), {
         message: content.pm,
         sendAt: content.sendAt,
