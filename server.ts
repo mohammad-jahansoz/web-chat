@@ -122,12 +122,11 @@ app.post("/search", async (req: Request, res: Response) => {
     .find({ username: username })
     .limit(5)
     .toArray();
-  res.render("client/chats", { users });
+  res.render("client/chats", { friends: users });
 });
 
 app.post("/:username", async (req: Request, res: Response) => {
   let chatId;
-  const username = req.params.username;
   const friendId = req.body.friendId;
   const userWithFriendId = [new ObjectId(friendId), new ObjectId(req.userId)];
   const chat = await getDB()
@@ -145,6 +144,7 @@ app.post("/:username", async (req: Request, res: Response) => {
     chatId = chat._id;
   }
   res.render("client/chat", {
+    chat: chat ? chat.chats : [],
     userId: req.userId,
     chatId: chatId,
     friendId: friendId,

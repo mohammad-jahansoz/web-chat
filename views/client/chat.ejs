@@ -4,7 +4,17 @@
     <link rel="stylesheet" href="/style/style.css" />
   </head>
   <body>
-    <ul id="messages" style="margin-bottom: 1rem"></ul>
+    <ul id="messages" style="margin-bottom: 1rem">
+      
+
+        <% for(const message of chat){ %>
+
+      <li class="<%= (message.userId == userId) ? "me" : "he-she" %>"><%= message.message %></li>
+
+      <% } %> 
+
+      
+    </ul>
     <form id="form" action="">
       <input type="hidden" id="userId" name="userId" value="<%= userId %>" />
       <input type="hidden" id="chatId" name="chatId" value="<%= chatId %>" />
@@ -49,8 +59,7 @@
     });
 
     socket.on("chat message", function (content) {
-      console.log(friendId + "   friendId");
-      console.log(content.friendId + "   content.friendId");
+   
       if (content.userId === friendId) {
         var item = document.createElement("li");
         item.textContent = content.pm;
