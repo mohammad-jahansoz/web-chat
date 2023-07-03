@@ -84,11 +84,15 @@ io.on("connection", (socket) => {
       // if (friendSocketId) {
       io.to(content.friendId).emit("chat message", content);
       // }
-      NewMessage.save(new ObjectId(content.chatId), {
-        message: content.pm,
-        sendAt: content.sendAt,
-        userId: new ObjectId(content.userId),
-      });
+      NewMessage.save(
+        new ObjectId(content.chatId),
+        [new ObjectId(content.userId), new ObjectId(content.friendId)],
+        {
+          message: content.pm,
+          sendAt: content.sendAt,
+          userId: new ObjectId(content.userId),
+        }
+      );
     }
   );
 });
