@@ -10,6 +10,7 @@
       <% for(const friend of friends){ %>
       <li>
         <h3><%= friend.username %></h3>
+        <p><%= friend.lastMessage %></p>
         <form action="/<%= friend.username %>" method="POST">
           <input type="hidden" name="friendId" value="<%= friend._id %>" />
           <button type="submit">send message</button>

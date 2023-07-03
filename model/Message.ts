@@ -49,7 +49,7 @@ class Message {
     return result.insertedId;
   }
   static async save(chatId: ObjectId, usersId: ObjectId[], message: message) {
-    const result = await getDB()
+    await getDB()
       .collection("messages")
       .updateOne({ _id: new ObjectId(chatId) }, { $push: { chats: message } });
     for (const userId of usersId) {

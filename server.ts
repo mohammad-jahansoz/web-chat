@@ -107,11 +107,25 @@ app.get("/", async (req: Request, res: Response) => {
         return chat.friendId;
       }
     );
-    const friendsUser = await getDB()
+    const friends = await getDB()
       .collection("users")
       .find({ _id: { $in: friendsId } })
+      .sort({ "chats.lastUpdate": -1 })
       .toArray();
-    res.render("client/chats", { userId: req.userId, friends: friendsUser });
+
+    for (const friend of friends) {
+      let trueChatIndex = friend.chats.findIndex((i: { friendId: string }) => {
+        return req.userId == i.friendId;
+      });
+      friend.lastMessage = friend.chats[trueChatIndex].lastMessage;
+      friend.lastUpdate = friend.chats[trueChatIndex].lastUpdate;
+    }
+
+    friends.sort((a, b) => {
+      return b.lastUpdate - a.lastUpdate;
+    });
+
+    res.render("client/chats", { userId: req.userId, friends: friends });
   }
 });
 
