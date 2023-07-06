@@ -51,20 +51,18 @@ class Message {
   static async save(chatId: ObjectId, usersId: ObjectId[], message: message) {
     await getDB()
       .collection("messages")
-      .updateOne({ _id: new ObjectId(chatId) }, { $push: { chats: message } });
-    for (const userId of usersId) {
-      await getDB()
-        .collection("users")
-        .updateOne(
-          { _id: new ObjectId(userId), "chats.chatId": new ObjectId(chatId) },
-          {
-            $set: {
-              "chats.$.lastMessage": message.message,
-              "chats.$.lastUpdate": message.sendAt,
-            },
-          }
-        );
-    }
+      .updateOne(
+        { _id: new ObjectId(chatId) },
+        {
+          $push: {
+            chats: message,
+          },
+          $set: {
+            lastMessage: message.message,
+            lastUpdate: message.sendAt,
+          },
+        }
+      );
   }
 }
 

@@ -9,7 +9,7 @@ import Message from "./model/saveMessages";
 import { ObjectId } from "mongodb";
 import bodyParser from "body-parser";
 import NewMessage from "./model/Message";
-
+import mongodb from "mongodb";
 declare module "express-session" {
   export interface SessionData {
     userId: string;
@@ -101,9 +101,12 @@ app.get("/", async (req: Request, res: Response) => {
   const user = await getDB()
     .collection("users")
     .findOne({ _id: new ObjectId(req.userId) });
+
   if (user) {
+    const chatIds: ObjectId[] = [];
     const friendsId = user.chats.map(
-      (chat: { chatId: ObjectId; friendId: ObjectId }) => {
+      (chat: { friendId: ObjectId; chatId: ObjectId }) => {
+        chatIds.push(chat.chatId);
         return chat.friendId;
       }
     );
@@ -113,17 +116,32 @@ app.get("/", async (req: Request, res: Response) => {
       .sort({ "chats.lastUpdate": -1 })
       .toArray();
 
-    for (const friend of friends) {
-      let trueChatIndex = friend.chats.findIndex((i: { friendId: string }) => {
-        return req.userId == i.friendId;
-      });
-      friend.lastMessage = friend.chats[trueChatIndex].lastMessage;
-      friend.lastUpdate = friend.chats[trueChatIndex].lastUpdate;
-    }
+    // const projection = { lastMessage: 1, lastUpdate: 1 };
+    const chats = await getDB()
+      .collection("messages")
+      .find(
+        { _id: { $in: chatIds } },
+        { projection: { lastMessage: 1, lastUpdate: 1 } }
+      )
+      .toArray();
 
-    friends.sort((a, b) => {
-      return b.lastUpdate - a.lastUpdate;
-    });
+
+
+      for(const friend of friends){
+        
+      }
+
+    // for (const friend of friends) {
+    //   let trueChatIndex = friend.chats.findIndex((i: { friendId: string }) => {
+    //     return req.userId == i.friendId;
+    //   });
+    //   friend.lastMessage = friend.chats[trueChatIndex].lastMessage;
+    //   friend.lastUpdate = friend.chats[trueChatIndex].lastUpdate;
+    // }
+
+    // friends.sort((a, b) => {
+    //   return b.lastUpdate - a.lastUpdate;
+    // });
 
     res.render("client/chats", { userId: req.userId, friends: friends });
   }
