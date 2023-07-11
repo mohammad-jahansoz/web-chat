@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <ul>
+      <% for(const friend of friends){ %>
+      <li>
+        <h3><%= friend.username %></h3>
+        <p><%= friend.lastMessage %></p>
+        <form action="/<%= friend.username %>" method="POST">
+          <input type="hidden" name="friendId" value="<%= friend._id %>" />
+          <button type="submit">send message</button>
+        </form>
+      </li>
+      <% } %>
+    </ul>
+  </body>
+</html>
