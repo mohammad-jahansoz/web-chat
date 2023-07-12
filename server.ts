@@ -1,7 +1,7 @@
 import express, { Express, NextFunction, Request, Response } from "express";
 import http from "http";
 import { Server } from "socket.io";
-import dotenv from "dotenv";
+import { config } from "dotenv";
 import { connectToDatabase } from "./startup/db";
 import session, { SessionOptions } from "express-session";
 import MongoStore from "connect-mongo";
@@ -17,7 +17,7 @@ declare module "express-session" {
 }
 
 const sessionOption: SessionOptions = {
-  secret: "super fucking secret key",
+  secret: process.env.SESSION_SECRET_KEY || "PLS SET SECRET KEY",
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
@@ -33,7 +33,7 @@ const app: Express = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-dotenv.config();
+config();
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session(sessionOption));
 app.use(express.static(__dirname + "/public"));

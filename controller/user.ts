@@ -52,7 +52,6 @@ export async function home(req: Request, res: Response) {
     friends.sort((a, b) => {
       return b.lastUpdate - a.lastUpdate;
     });
-
     res.render("client/chats", { userId: req.userId, friends: friends });
   }
 }
