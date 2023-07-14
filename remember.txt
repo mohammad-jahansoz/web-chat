@@ -1,1 +1,29 @@
 let users: { [userId: string]: string } = {};
+
+
+<ul>
+    <% for(const friend of friends){ %>
+    <li>
+      <h3><%= friend.username %></h3>
+      <p><%= friend.lastMessage %></p>
+      <form action="/<%= friend.username %>" method="POST">
+        <input type="hidden" name="friendId" value="<%= friend._id %>" />
+        <button type="submit">send message</button>
+      </form>
+    </li>
+    <% } %>
+  </ul>
+
+
+  <ul id="messages" style="margin-bottom: 1rem">
+    <% for(const message of chat){ %>
+    <li class="<%= (message.userId == userId) ? "me" : "he-she" %>"><%= message.message %></li>
+    <% } %>
+  </ul>
+  <form id="form" action="">
+    <input type="hidden" id="userId" name="userId" value="<%= userId %>" />
+    <input type="hidden" id="chatId" name="chatId" value="<%= chatId %>" />
+    <input type="hidden" id="friendId" name="friendId" value="<%= friendId %>" />
+    <input id="input" autocomplete="off" />
+    <button>Send</button>
+  </form>
