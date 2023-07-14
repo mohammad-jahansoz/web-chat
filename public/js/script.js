@@ -49,10 +49,35 @@ function submitForm(li) {
 }
 
 function sendData(element) {
+  const results = document.getElementById("searchResult");
   const text = element.value;
-  fetch("search", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ payload: text }),
-  });
+
+  const match = text.match(/^[a-zA-z]*/);
+  const match2 = text.match(/\s*/);
+  if (match2[0] === text) {
+    results.innerHTML = "";
+  }
+  if (text && match[0] === text) {
+    fetch("search", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ payload: text }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        results.innerHTML = "";
+        let payload = data.payload;
+        if (payload.length > 0) {
+          for (res of payload) {
+            const li = document.createElement("li");
+            const h4 = document.createElement("h4");
+            h4.textContent = res.username;
+            li.appendChild(h4);
+            results.append(li);
+          }
+        } else {
+          results.innerHTML = "";
+        }
+      });
+  }
 }

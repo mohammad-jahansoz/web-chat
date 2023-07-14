@@ -40,6 +40,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 config();
+app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(session(sessionOption));
 app.use(express.static(__dirname + "/public"));

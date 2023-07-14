@@ -54,13 +54,14 @@ export function getSearch(req: Request, res: Response) {
 }
 
 export async function postSearch(req: Request, res: Response) {
-  const username = req.body.username;
-  const users = await getDB()
+  const payload = req.body.payload;
+  console.log(payload);
+  let result = await getDB()
     .collection("users")
-    .find({ username: username })
+    .find({ username: { $regex: new RegExp("^" + payload + ".*", "i") } })
     .limit(5)
     .toArray();
-  res.render("client/chats", { friends: users });
+  res.send({ payload: result });
 }
 
 export async function sendMessage(req: Request, res: Response) {
