@@ -3,16 +3,10 @@ import { getDB } from "../startup/db";
 import { Request, Response } from "express";
 import NewMessage from "../model/Message";
 
-declare module "express-serve-static-core" {
-  export interface Request {
-    userId: string;
-  }
-}
-
 export async function home(req: Request, res: Response) {
   const user = await getDB()
     .collection("users")
-    .findOne({ _id: new ObjectId(req.userId) });
+    .findOne({ _id: new ObjectId(req.user._id) });
 
   if (user) {
     const chatIds: ObjectId[] = [];
@@ -25,7 +19,6 @@ export async function home(req: Request, res: Response) {
     const friends = await getDB()
       .collection("users")
       .find({ _id: { $in: friendsId } })
-      // .sort({ "chats.lastUpdate": -1 })
       .toArray();
 
     const chats = await getDB()
@@ -52,7 +45,7 @@ export async function home(req: Request, res: Response) {
     friends.sort((a, b) => {
       return b.lastUpdate - a.lastUpdate;
     });
-    res.render("client/chats", { userId: req.userId, friends: friends });
+    res.render("client/chats", { friends: friends });
   }
 }
 
@@ -72,26 +65,30 @@ export async function postSearch(req: Request, res: Response) {
 
 export async function sendMessage(req: Request, res: Response) {
   let chatId;
-  const friendId = req.body.friendId;
-  const userWithFriendId = [new ObjectId(friendId), new ObjectId(req.userId)];
+  const friend = await getDB()
+    .collection("users")
+    .findOne({ _id: new ObjectId(req.body.friendId) });
+  const userWithFriendId = [
+    new ObjectId(friend?._id),
+    new ObjectId(req.user._id),
+  ];
   const chat = await getDB()
     .collection("messages")
     .findOne({ users: { $all: userWithFriendId } });
   if (!chat) {
-    console.log("new friend");
+    // console.log("new friend");
     const message = new NewMessage(null, [
-      new ObjectId(friendId),
-      new ObjectId(req.userId),
+      new ObjectId(friend?._id),
+      new ObjectId(req.user._id),
     ]);
     chatId = await message.createChat();
   } else {
-    console.log("old friend");
+    // console.log("old friend");
     chatId = chat._id;
   }
   res.render("client/chat", {
     chat: chat ? chat.chats : [],
-    userId: req.userId,
     chatId: chatId,
-    friendId: friendId,
+    friend: friend,
   });
 }

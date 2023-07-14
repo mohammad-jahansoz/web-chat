@@ -2,17 +2,23 @@ import express, { Express, NextFunction, Request, Response } from "express";
 import http from "http";
 import { Server } from "socket.io";
 import { config } from "dotenv";
-import { connectToDatabase } from "./startup/db";
+import { connectToDatabase, getDB } from "./startup/db";
 import session, { SessionOptions } from "express-session";
 import MongoStore from "connect-mongo";
 import bodyParser from "body-parser";
 import userRoutes from "./router/user";
 import authRoutes from "./router/auth";
 import socketController from "./controller/socket";
+import { ObjectId } from "mongodb";
 
 declare module "express-session" {
   export interface SessionData {
     userId: string;
+  }
+}
+declare module "express-serve-static-core" {
+  export interface Request {
+    user: { _id: ObjectId };
   }
 }
 
@@ -40,10 +46,24 @@ app.use(express.static(__dirname + "/public"));
 app.set("view engine", "ejs");
 app.set("views", "views");
 
-app.use((req: Request, res: Response, next: NextFunction) => {
+app.use(async (req: Request, res: Response, next: NextFunction) => {
   if (req.session.userId) {
-    req.userId = req.session.userId;
+    const user = await getDB()
+      .collection("users")
+      .findOne({ _id: new ObjectId(req.session.userId) });
+    if (user) {
+      req.user = user;
+    } else {
+      req.session.destroy((err) => {
+        console.log(err);
+      });
+    }
   }
+  next();
+});
+
+app.use((req: Request, res: Response, next: NextFunction) => {
+  res.locals.user = req.user;
   next();
 });
 

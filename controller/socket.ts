@@ -11,9 +11,6 @@ export default async function socket(io: Server) {
 
     socket.on("register", (userId: string) => {
       socket.join(userId);
-      // console.log("register" + userId);
-      // users[userId] = socket.id;
-      // console.log(socket.id);
     });
 
     socket.on(
@@ -26,14 +23,7 @@ export default async function socket(io: Server) {
         friendId: string;
       }) => {
         content.sendAt = new Date();
-        // console.log(content.userId + "me");
-        // console.log(content.friendId + "he");
-        // const friendSocketId = users[content.friendId];
-        // console.log(friendSocketId + "            socketid");
-        // console.log(users);
-        // if (friendSocketId) {
         io.to(content.friendId).emit("chat message", content);
-        // }
         NewMessage.save(
           new ObjectId(content.chatId),
           [new ObjectId(content.userId), new ObjectId(content.friendId)],

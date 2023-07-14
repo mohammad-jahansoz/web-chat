@@ -1,4 +1,5 @@
 let users: { [userId: string]: string } = {};
+users[userId] = socket.id;
 
 
 <ul>
@@ -26,4 +27,10 @@ let users: { [userId: string]: string } = {};
     <input type="hidden" id="friendId" name="friendId" value="<%= friendId %>" />
     <input id="input" autocomplete="off" />
     <button>Send</button>
+  </form>
+
+
+  <form action="/search" method="POST">
+    <input type="text" required autocomplete="off" name="username" placeholder="username enter here" />
+    <button type="submit">search</button>
   </form>
