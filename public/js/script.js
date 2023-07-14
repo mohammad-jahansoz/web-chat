@@ -4,6 +4,9 @@ var input = document.getElementById("input");
 const userId = document.getElementById("userId").value;
 const chatId = document.getElementById("chatId").value;
 const friendId = document.getElementById("friendId").value;
+const messages = document.getElementById("messages");
+
+messages.scrollTo(0, messages.scrollHeight);
 
 socket.emit("register", userId);
 
@@ -15,7 +18,8 @@ form.addEventListener("submit", function (e) {
     // item.style.textAlign = "right";
     item.classList.add("me");
     messages.appendChild(item);
-    window.scrollTo(0, document.body.scrollHeight);
+    // window.scrollTo(0, document.body.scrollHeight);
+    messages.scrollTo(0, messages.scrollHeight);
     socket.emit("chat message", {
       pm: input.value,
       chatId: chatId,
@@ -32,7 +36,8 @@ socket.on("chat message", function (content) {
     item.textContent = content.pm;
     item.classList.add("he-she");
     messages.appendChild(item);
-    window.scrollTo(0, document.body.scrollHeight);
+    // window.scrollTo(0, document.body.scrollHeight);
+    messages.scrollTo(0, messages.scrollHeight);
   } else {
     alert(`شما پیام دارید  :  ${content.pm.substring(0, 30)} ...`);
   }
