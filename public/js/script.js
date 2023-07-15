@@ -44,6 +44,7 @@ socket.on("chat message", function (content) {
 });
 
 function submitForm(li) {
+  console.log(li);
   const form = li.querySelector("form");
   form.submit();
 }
@@ -70,10 +71,28 @@ function sendData(element) {
         if (payload.length > 0) {
           for (res of payload) {
             const li = document.createElement("li");
+            const form = document.createElement("form");
+            form.action = "/" + res.username;
+            form.method = "POST";
+            const input = document.createElement("input");
+            input.name = "friendId";
+            input.value = res._id;
+            input.type = "hidden";
+            const img = document.createElement("img");
+            img.src = res.imageUrl;
+            form.appendChild(input);
+            form.appendChild(img);
             const h4 = document.createElement("h4");
+            const span = document.createElement("span");
             h4.textContent = res.username;
-            li.appendChild(h4);
-            results.append(li);
+            span.appendChild(h4);
+            form.appendChild(span);
+            li.appendChild(form);
+            li.addEventListener("click", function () {
+              submitForm(li);
+            });
+            results.appendChild(li);
+            // results.append(li);
           }
         } else {
           results.innerHTML = "";

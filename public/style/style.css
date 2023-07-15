@@ -348,10 +348,8 @@ a {
   color: var(--textColor);
   width: 85%;
   padding: 0.5rem;
-  margin-bottom: 1rem;
   display: block;
-  margin-right: 1rem;
-  margin-left: 1rem;
+  margin: 1rem;
 }
 
 .profile-chat {
