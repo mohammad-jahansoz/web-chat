@@ -1,5 +1,4 @@
 function submitForm(li) {
-  console.log(li);
   const form = li.querySelector("form");
   form.submit();
 }
@@ -27,9 +26,9 @@ function sendData(element) {
           for (res of payload) {
             const li = document.createElement("li");
             const form = document.createElement("form");
+            const input = document.createElement("input");
             form.action = "/" + res.username;
             form.method = "POST";
-            const input = document.createElement("input");
             input.name = "friendId";
             input.value = res._id;
             input.type = "hidden";
@@ -55,3 +54,38 @@ function sendData(element) {
       });
   }
 }
+const imageUpload = document.getElementById("imageUpload");
+const imagePreview = document.getElementById("image");
+const uploadContainer = document.getElementById("uploadContainer");
+imageUpload.addEventListener("change", () => {
+  const input = document.getElementById("input");
+  input.disabled = true;
+  const selectedFile = imageUpload.files[0];
+  // if (imageUpload && imageUpload.type.startsWith("image/")) {
+  const reader = new FileReader();
+  reader.onload = function (e) {
+    imagePreview.src = e.target.result;
+    uploadContainer.style.display = "block";
+  };
+  reader.readAsDataURL(selectedFile);
+  // } else {
+  // imagePreview.src = "";
+  // imagePreview.style.display = "none";
+  // }
+});
+
+const cancel = document.getElementById("cancel");
+cancel.addEventListener("click", () => {
+  uploadContainer.style.display = "none";
+  imageUpload.value = null;
+  imagePreview.src = "";
+  const input = document.getElementById("input");
+  input.disabled = false;
+});
+const send = document.getElementById("send");
+send.addEventListener("click", function () {
+  const form = document.getElementById("form");
+  const input = document.getElementById("input");
+  input.disabled = false;
+  form.submit();
+});

@@ -1,6 +1,8 @@
 <%- include("./includes/head.ejs") %>
 <%- include("./includes/header.ejs") %>
 
+<script src="/js/socket.js" defer></script>
+
 <body>
   <div class="messenger">
     <div class="head">
@@ -9,9 +11,8 @@
       </a>
       <a href="/search"><i class="fa-solid fa-magnifying-glass"></i></a>
     </div>
-    <input class="search" autocomplete="off" name="username" type="text" placeholder="username enter here" onkeyup="sendData(this)">
-    <ul class="friends" id="searchResult">
-    </ul>
+    <div id="video-section">
+    </div>
   </div>
 </body>
 <%- include("./includes/footer.ejs") %>

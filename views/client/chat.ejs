@@ -23,7 +23,15 @@
       <input type="hidden" id="chatId" name="chatId" value="<%= chatId %>" />
       <input type="hidden" id="friendId" name="friendId" value="<%= friend._id %>" />
       <input type="text" id="input" autocomplete="off">
-      <i class="fa-solid fa-image"></i>
+      <input type="file" style="display: none;" id="imageUpload">
+      <div id="uploadContainer" style="display: none;">
+        <img src="" id="image" alt="">
+        <i class="fa-solid fa-xmark" id="cancel"></i>
+        <i class="fa-solid fa-paper-plane" id="send"></i>
+      </div>
+      <label for="imageUpload">
+        <i class="fa-solid fa-image" style="cursor: pointer;"></i>
+      </label>
     </form>
   </div>
 

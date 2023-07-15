@@ -424,3 +424,43 @@ a {
   background-color: var(--primaryColor); /* رنگ قسمت قابل دیدن اسکرول بار */
   border-radius: 2rem;
 }
+
+#video-section {
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+}
+
+#video-section video {
+  width: 90%;
+  height: 40%;
+  object-fit: cover;
+}
+
+.enter-message #uploadContainer {
+  width: 250px;
+  height: 250px;
+  position: absolute;
+  bottom: 180px;
+  right: 65px;
+  box-shadow: -1px -3px 339px 172px rgba(0, 0, 0, 0.91);
+  -webkit-box-shadow: -1px -3px 339px 172px rgba(0, 0, 0, 0.91);
+  -moz-box-shadow: -1px -3px 339px 172px rgba(0, 0, 0, 0.91);
+}
+
+.enter-message #uploadContainer img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 2rem;
+  border: 2px solid red;
+}
+
+.enter-message #uploadContainer i {
+  transition: transform 0.3s ease-in-out;
+  cursor: pointer;
+  font-size: 18px;
+}
+.enter-message #uploadContainer i:hover {
+  transform: scale(1.2);
+}
