@@ -1,8 +1,8 @@
 <%- include("./includes/head.ejs") %>
 <%- include("./includes/header.ejs") %>
+<script src="/js/socket.js" defer></script>
 
 <body>
-
   <div class="messenger">
     <div class="head">
       <a href="/">
@@ -15,7 +15,7 @@
     </div>
     <ul class="chats" id="messages">
       <% for(const message of chat){ %>
-      <li class="<%= (message.userId == user._id) ? "me" : "he-she" %>"><%= message.message %></li>
+      <li class="<%= (message.userId.toString() === user._id.toString()) ? "me" : "he-she" %>"><%= message.message %></li>
       <% } %>
     </ul>
     <form id="form" class="enter-message">

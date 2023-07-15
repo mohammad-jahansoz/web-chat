@@ -58,7 +58,10 @@ export async function postSearch(req: Request, res: Response) {
   console.log(payload);
   let result = await getDB()
     .collection("users")
-    .find({ username: { $regex: new RegExp("^" + payload + ".*", "i") } })
+    .find({
+      _id: { $ne: req.user._id },
+      username: { $regex: new RegExp("^" + payload + ".*", "i") },
+    })
     .limit(5)
     .toArray();
   res.send({ payload: result });
