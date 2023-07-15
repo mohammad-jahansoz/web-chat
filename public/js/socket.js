@@ -15,10 +15,8 @@ form.addEventListener("submit", function (e) {
   if (input.value) {
     var item = document.createElement("li");
     item.textContent = input.value;
-    // item.style.textAlign = "right";
     item.classList.add("me");
     messages.appendChild(item);
-    // window.scrollTo(0, document.body.scrollHeight);
     messages.scrollTo(0, messages.scrollHeight);
     socket.emit("chat message", {
       pm: input.value,
@@ -36,7 +34,6 @@ socket.on("chat message", function (content) {
     item.textContent = content.pm;
     item.classList.add("he-she");
     messages.appendChild(item);
-    // window.scrollTo(0, document.body.scrollHeight);
     messages.scrollTo(0, messages.scrollHeight);
   } else {
     alert(`شما پیام دارید  :  ${content.pm.substring(0, 30)} ...`);
