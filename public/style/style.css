@@ -409,6 +409,14 @@ a {
   margin-right: 5px;
   margin-left: 5px;
 }
+.chats li img {
+  width: 100%;
+  border-radius: 2rem;
+}
+.sendImage {
+  width: 100%;
+  border-radius: 2rem;
+}
 .chats li {
   color: var(--textColor);
   border: 1px solid var(--primaryColor);

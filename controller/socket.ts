@@ -17,6 +17,7 @@ export default async function socket(io: Server) {
       "chat message",
       (content: {
         sendAt: Date;
+        type: string;
         pm: string;
         userId: string;
         chatId: string;
@@ -31,6 +32,31 @@ export default async function socket(io: Server) {
             message: content.pm,
             sendAt: content.sendAt,
             userId: new ObjectId(content.userId),
+            type: content.type,
+          }
+        );
+      }
+    );
+    socket.on(
+      "sendImage",
+      (content: {
+        sendAt: Date;
+        type: string;
+        imageUrl: string;
+        userId: string;
+        chatId: string;
+        friendId: string;
+      }) => {
+        content.sendAt = new Date();
+        io.to(content.friendId).emit("sendImage", content);
+        NewMessage.save(
+          new ObjectId(content.chatId),
+          [new ObjectId(content.userId), new ObjectId(content.friendId)],
+          {
+            message: content.imageUrl,
+            sendAt: content.sendAt,
+            userId: new ObjectId(content.userId),
+            type: content.type,
           }
         );
       }

@@ -14,8 +14,17 @@
       </span>
     </div>
     <ul class="chats" id="messages">
+
       <% for(const message of chat){ %>
-      <li class="<%= (message.userId.toString() === user._id.toString()) ? "me" : "he-she" %>"><%= message.message %></li>
+      <% if(message.type === "img"){ %>
+      <li class="<%= (message.userId.toString() === user._id.toString()) ? "me" : "he-she" %>">
+        <img src="<%= message.message %>"></img>
+      </li>
+      <% }else{ %>
+      <li class="<%= (message.userId.toString() === user._id.toString()) ? "me" : "he-she" %>">
+        <p><%= message.message %></p>
+      </li>
+      <%   } %>
       <% } %>
     </ul>
     <form id="form" class="enter-message">
@@ -23,7 +32,7 @@
       <input type="hidden" id="chatId" name="chatId" value="<%= chatId %>" />
       <input type="hidden" id="friendId" name="friendId" value="<%= friend._id %>" />
       <input type="text" id="input" autocomplete="off">
-      <input type="file" style="display: none;" id="imageUpload">
+      <input type="file" style="display: none;" name="image" id="imageUpload">
       <div id="uploadContainer" style="display: none;">
         <img src="" id="image" alt="">
         <i class="fa-solid fa-xmark" id="cancel"></i>

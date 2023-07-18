@@ -10,6 +10,7 @@ import userRoutes from "./router/user";
 import authRoutes from "./router/auth";
 import socketController from "./controller/socket";
 import { ObjectId } from "mongodb";
+import multer from "multer";
 
 declare module "express-session" {
   export interface SessionData {
@@ -66,6 +67,33 @@ app.use(async (req: Request, res: Response, next: NextFunction) => {
 app.use((req: Request, res: Response, next: NextFunction) => {
   res.locals.user = req.user;
   next();
+});
+
+type DestinationCallback = (error: Error | null, destination: string) => void;
+type FileNameCallback = (error: Error | null, filename: string) => void;
+const storage = multer.diskStorage({
+  destination: (
+    request: Request,
+    file: Express.Multer.File,
+    callback: DestinationCallback
+  ): void => {
+    callback(null, "./public/images/chats");
+  },
+  filename: (
+    req: Request,
+    file: Express.Multer.File,
+    callback: FileNameCallback
+  ): void => {
+    callback(null, file.originalname);
+  },
+});
+
+const upload = multer({ storage: storage });
+
+app.post("/upload", upload.single("image"), (req: Request, res: Response) => {
+  console.log(req.file?.path);
+  res.json({ path: req.file?.path });
+  res.end();
 });
 
 app.use(userRoutes);

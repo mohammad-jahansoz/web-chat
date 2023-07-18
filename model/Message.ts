@@ -5,6 +5,7 @@ type message = {
   message: string;
   userId: ObjectId;
   sendAt: Date;
+  type: string;
 };
 
 class Message {

@@ -96,3 +96,5 @@ export async function sendMessage(req: Request, res: Response) {
     friend: friend,
   });
 }
+
+export async function upload(req: Request, res: Response) {}
