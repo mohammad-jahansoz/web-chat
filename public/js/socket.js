@@ -61,7 +61,15 @@ send.addEventListener("click", function () {
       });
       const img = document.createElement("img");
       img.src = newString;
-      messages.appendChild(img);
+      img.classList = "sendImage";
+      const li = document.createElement("li");
+      li.classList = "me";
+      li.appendChild(img);
+      messages.appendChild(li);
+      uploadContainer.style.display = "none";
+      imageUpload.value = null;
+      imagePreview.src = "";
+      messages.scrollTo(0, messages.scrollHeight);
     })
     .catch((error) => {
       console.error("Error send image", error);
@@ -76,8 +84,10 @@ form.addEventListener("submit", function (e) {
   e.preventDefault();
 
   if (input.value) {
-    var item = document.createElement("li");
-    item.textContent = input.value;
+    const item = document.createElement("li");
+    const p = document.createElement("p");
+    p.textContent = input.value;
+    item.appendChild(p);
     item.classList.add("me");
     messages.appendChild(item);
     messages.scrollTo(0, messages.scrollHeight);
@@ -97,8 +107,10 @@ form.addEventListener("submit", function (e) {
 
 socket.on("chat message", function (content) {
   if (content.userId === friendId) {
-    var item = document.createElement("li");
-    item.textContent = content.pm;
+    const item = document.createElement("li");
+    const p = document.createElement("p");
+    p.textContent = content.pm;
+    item.appendChild(p);
     item.classList.add("he-she");
     messages.appendChild(item);
     messages.scrollTo(0, messages.scrollHeight);
