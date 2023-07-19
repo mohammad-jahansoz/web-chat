@@ -87,7 +87,6 @@ form.addEventListener("submit", function (e) {
     p.textContent = input.value;
     item.appendChild(p);
     item.classList.add("me");
-    // item.style.animation = "pop 0.3s forwards";
     messages.appendChild(item);
     messages.scrollTo(0, messages.scrollHeight);
     socket.emit("chat message", {

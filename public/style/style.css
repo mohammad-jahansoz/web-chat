@@ -1,7 +1,7 @@
 @keyframes fadeInOut {
   0% {
     opacity: 0;
-    transform: scale(0.9);
+    transform: scale(0.8);
   }
   100% {
     opacity: 1;
@@ -12,13 +12,11 @@
 .me {
   align-self: flex-end;
   text-align: right;
-  animation: fadeInOut 0.5s ease-in-out;
 }
 
 .he-she {
   text-align: left;
   align-self: flex-start;
-  animation: fadeInOut 0.5s ease-in-out;
 }
 
 body {
@@ -422,6 +420,7 @@ a {
   max-width: 80%;
   margin-right: 5px;
   margin-left: 5px;
+  animation: fadeInOut 0.5s ease-in-out;
 }
 .chats li img {
   width: 100%;
@@ -436,6 +435,10 @@ a {
   border: 1px solid var(--primaryColor);
   padding: 0.5rem 1rem;
   border-radius: 2rem;
+}
+
+.chats li p {
+  text-align: left;
 }
 
 .chats::-webkit-scrollbar {
