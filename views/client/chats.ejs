@@ -17,7 +17,7 @@
           <img src="<%= friend.imageUrl %>" alt="">
           <span>
             <h4><%= friend.username %></h4>
-            <p><%= friend.lastMessage %></p>
+            <p><%= friend.lastMessage.substring(0, 30) %></p>
           </span>
         </form>
       </li>

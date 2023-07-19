@@ -76,8 +76,6 @@ send.addEventListener("click", function () {
     });
 });
 
-messages.scrollTo(0, messages.scrollHeight);
-
 socket.emit("register", userId);
 
 form.addEventListener("submit", function (e) {
@@ -89,6 +87,7 @@ form.addEventListener("submit", function (e) {
     p.textContent = input.value;
     item.appendChild(p);
     item.classList.add("me");
+    // item.style.animation = "pop 0.3s forwards";
     messages.appendChild(item);
     messages.scrollTo(0, messages.scrollHeight);
     socket.emit("chat message", {
@@ -132,3 +131,5 @@ socket.on("sendImage", function (content) {
     alert(`شما پیام دارید  :  ${content.pm.substring(0, 30)} ...`);
   }
 });
+
+messages.scrollTo(0, messages.scrollHeight);

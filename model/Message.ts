@@ -59,7 +59,8 @@ class Message {
             chats: message,
           },
           $set: {
-            lastMessage: message.message,
+            lastMessage: message.type === "img" ? "Image📸" : message.message,
+            // lastMessage: message.message,
             lastUpdate: message.sendAt,
           },
         }

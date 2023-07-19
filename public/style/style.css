@@ -1,11 +1,24 @@
+@keyframes fadeInOut {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .me {
   align-self: flex-end;
   text-align: right;
+  animation: fadeInOut 0.5s ease-in-out;
 }
 
 .he-she {
   text-align: left;
   align-self: flex-start;
+  animation: fadeInOut 0.5s ease-in-out;
 }
 
 body {
